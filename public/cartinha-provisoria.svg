@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400">
+  <rect width="300" height="400" fill="#fffdf6"/>
+  <g stroke="#9db4d6" stroke-opacity=".5" stroke-width="1">
+    <path d="M0 60H300M0 88H300M0 116H300M0 144H300M0 172H300M0 200H300M0 228H300M0 256H300M0 284H300M0 312H300M0 340H300M0 368H300"/>
+  </g>
+  <path d="M36 0V400" stroke="#b3261e" stroke-opacity=".45" stroke-width="2"/>
+  <g stroke="#5c5248" stroke-opacity=".35" stroke-width="3" stroke-linecap="round">
+    <path d="M50 82h170M50 110h200M50 138h150M50 166h190M50 194h120M50 222h180"/>
+  </g>
+  <text x="168" y="300" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#5c5248">Imagem provisória</text>
+</svg>
