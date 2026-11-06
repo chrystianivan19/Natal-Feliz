@@ -5,6 +5,8 @@ const baseURL = process.env.E2E_BASE_URL ?? "http://localhost:3000";
 export default defineConfig({
   testDir: "tests/e2e",
   timeout: 30_000,
+  // Um teste por vez: a adoção muda o banco que a lista lê.
+  workers: 1,
   use: { baseURL },
   projects: [
     {
