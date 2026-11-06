@@ -1,26 +1,161 @@
 @import "tailwindcss";
 
+/* ============================================================
+   NATAL FELIZ — tokens do design system
+   Contraste (WCAG) medido sobre --papel #FBF6EA:
+   tinta 13.9 · tinta-suave 7.1 · vermelho 6.1 · pinheiro 8.9 · dourado-escuro 5.7 → AA
+   dourado #B08D3C = 2.9 → SÓ decorativo (selos, bordas, fitas), nunca texto.
+   ============================================================ */
+@theme {
+  --color-papel: #fbf6ea;
+  --color-papel-escuro: #f1e8d2;
+  --color-tinta: #2b2620;
+  --color-tinta-suave: #5c5248;
+  --color-vermelho: #b3261e;
+  --color-vermelho-escuro: #8c1d17;
+  --color-pinheiro: #1f4d3a;
+  --color-pinheiro-escuro: #163829;
+  --color-dourado: #b08d3c;
+  --color-dourado-escuro: #7a5e1e;
+  --color-pauta: rgb(92 132 186 / 0.22);
+  --color-margem: rgb(179 38 30 / 0.45);
+
+  --font-manuscrita: var(--fonte-caveat), "Segoe Print", cursive;
+  --font-serif: var(--fonte-source-serif), Georgia, serif;
+
+  --radius-cartao: 1.25rem;
+  --radius-botao: 999px;
+
+  --shadow-papel: 0 1px 2px rgb(43 38 32 / 0.08), 0 8px 24px -12px rgb(43 38 32 / 0.28);
+  --shadow-elevado: 0 2px 4px rgb(43 38 32 / 0.1), 0 18px 36px -14px rgb(43 38 32 / 0.35);
+
+  --ease-suave: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Pautas e margem do caderno: proporcionais à tela */
+  --pauta: 28px;
+  --margem-x: 16px;
+  --recuo-conteudo: 28px; /* conteúdo começa depois da margem vermelha */
+  --blur-vidro: 6px;
+  --altura-menu: 64px;
 }
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@media (min-width: 768px) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --pauta: 32px;
+    --margem-x: 56px;
+    --recuo-conteudo: 80px;
+    --blur-vidro: 14px;
+    --altura-menu: 0px;
   }
 }
 
+@layer base {
+/* Ruído de papel (SVG inline, ~0.4 KB) + pautas horizontais */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-papel);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .3 0 0 0 0 .2 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(var(--pauta) - 1px),
+      var(--color-pauta) calc(var(--pauta) - 1px),
+      var(--color-pauta) var(--pauta)
+    );
+  background-attachment: scroll;
+  color: var(--color-tinta);
+  font-family: var(--font-serif);
+  font-size: 1.0625rem;
+  line-height: var(--pauta);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, .manuscrita {
+  font-family: var(--font-manuscrita);
+  font-weight: 700;
+  line-height: 1.05;
+  color: var(--color-tinta);
+}
+
+/* Foco visível em tudo que é clicável */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--color-pinheiro);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+}
+
+@layer components {
+/* ---------- Vidro (liquid glass) ---------- */
+.vidro {
+  position: relative;
+  background: rgb(255 255 255 / 0.52);
+  -webkit-backdrop-filter: blur(var(--blur-vidro)) saturate(1.15);
+  backdrop-filter: blur(var(--blur-vidro)) saturate(1.15);
+  border: 1px solid rgb(255 255 255 / 0.75);
+  border-radius: var(--radius-cartao);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    inset 0 -1px 0 rgb(176 141 60 / 0.12),
+    var(--shadow-papel);
+}
+/* reflexo na borda superior */
+.vidro::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(160deg, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0) 38%);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .vidro { background: var(--color-papel); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .vidro {
+    background: var(--color-papel);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* Só elementos clicáveis ganham hover e elevação */
+.vidro-interativo {
+  cursor: pointer;
+  transition: transform 180ms var(--ease-suave), box-shadow 180ms var(--ease-suave);
+}
+@media (hover: hover) {
+  .vidro-interativo:hover {
+    transform: translateY(-2px);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.9), var(--shadow-elevado);
+  }
+}
+.vidro-interativo:active { transform: translateY(0); }
+
+/* ---------- Detalhes de carta ---------- */
+.fita {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  width: 88px;
+  height: 26px;
+  translate: -50% 0;
+  rotate: -3deg;
+  background: rgb(241 232 210 / 0.85);
+  box-shadow: 0 1px 2px rgb(43 38 32 / 0.15);
+  clip-path: polygon(3% 0, 97% 4%, 100% 100%, 0 96%);
+}
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

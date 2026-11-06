@@ -1,8 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
+  // O indicador de dev fica no topo para não cobrir o menu inferior no celular.
+  devIndicators: { position: "top-right" },
   partialPrefetching: true,
   turbopack: {
     rules: {
