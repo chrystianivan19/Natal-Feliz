@@ -10,7 +10,7 @@ export function altCartinha(c: Pick<CartinhaPublica, "codigo" | "idade">) {
 export function CardCartinha({ c, prioridade = false }: { c: CartinhaPublica; prioridade?: boolean }) {
   const indisponivel = c.status !== "disponivel";
   return (
-    <li data-testid="card-cartinha">
+    <li data-testid="card-cartinha" data-codigo={c.codigo}>
       <Link
         href={`/cartinhas/${c.codigo}`}
         aria-label={`Ler a cartinha de ${c.primeiroNome}, ${c.idade} anos${c.status === "apadrinhada" ? ", já apadrinhada" : c.status === "pendente" ? ", aguardando confirmação" : ""}`}
@@ -52,12 +52,10 @@ export function CardCartinha({ c, prioridade = false }: { c: CartinhaPublica; pr
   );
 }
 
+/** Lista renderizada só no servidor (sem hidratação). Os filtros escondem itens por `hidden`. */
 export function ListaCartas({ lista }: { lista: CartinhaPublica[] }) {
-  if (!lista.length) {
-    return <p className="vidro p-5">Nenhuma cartinha com esses filtros. Tente tirar algum.</p>;
-  }
   return (
-    <ul className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-5 lg:grid-cols-4">
+    <ul id="grade-cartinhas" className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-5 lg:grid-cols-4">
       {lista.map((c, i) => (
         <CardCartinha key={c.codigo} c={c} prioridade={i < 2} />
       ))}

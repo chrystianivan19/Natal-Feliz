@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { Contador } from "@/components/home/Contador";
-import { Grade } from "@/components/cartinhas/Grade";
+import { Filtros } from "@/components/cartinhas/Grade";
 import { ListaCartas } from "@/components/cartinhas/CardCartinha";
 import { listarCartinhas } from "@/lib/dados/cartinhas";
 import { obterContador } from "@/lib/dados/contador";
@@ -14,7 +13,6 @@ export const metadata: Metadata = {
 
 export default async function PaginaCartinhas() {
   const [lista, contagem] = await Promise.all([listarCartinhas(), obterContador()]);
-  const ordenada = filtrarCartinhas(lista, {});
   return (
     <div className="flex flex-col gap-6 pt-8 md:pt-12">
       <header className="flex flex-col gap-2">
@@ -25,10 +23,8 @@ export default async function PaginaCartinhas() {
         </p>
       </header>
       <Contador {...contagem} />
-      {/* Filtros leem a URL no navegador; a lista completa já vem no HTML. */}
-      <Suspense fallback={<ListaCartas lista={ordenada} />}>
-        <Grade lista={lista} />
-      </Suspense>
+      <Filtros lista={lista} />
+      <ListaCartas lista={filtrarCartinhas(lista, {})} />
     </div>
   );
 }

@@ -20,7 +20,7 @@ test.describe("lista de cartinhas", () => {
 
   test("filtro Menina reduz a lista e fica na URL", async ({ page }) => {
     await page.goto("/cartinhas");
-    const cards = page.getByTestId("card-cartinha");
+    const cards = page.getByTestId("card-cartinha").filter({ visible: true });
     await expect(cards).toHaveCount(12);
     await page.getByRole("button", { name: "Menina", exact: true }).click();
     await expect(cards).toHaveCount(6);
@@ -29,21 +29,21 @@ test.describe("lista de cartinhas", () => {
 
   test("filtro de idade e só disponíveis", async ({ page }) => {
     await page.goto("/cartinhas?faixa=7-9");
-    await expect(page.getByTestId("card-cartinha")).toHaveCount(4);
+    await expect(page.getByTestId("card-cartinha").filter({ visible: true })).toHaveCount(4);
     await page.getByRole("button", { name: "Só disponíveis" }).click();
-    await expect(page.getByTestId("card-cartinha")).toHaveCount(3);
+    await expect(page.getByTestId("card-cartinha").filter({ visible: true })).toHaveCount(3);
   });
 
   test("busca por pedido", async ({ page }) => {
     await page.goto("/cartinhas");
     await page.getByRole("searchbox", { name: "Buscar cartinha" }).fill("bicicleta");
-    await expect(page.getByTestId("card-cartinha")).toHaveCount(1);
-    await expect(page.getByTestId("card-cartinha")).toContainText("Sofia");
+    await expect(page.getByTestId("card-cartinha").filter({ visible: true })).toHaveCount(1);
+    await expect(page.getByTestId("card-cartinha").filter({ visible: true })).toContainText("Sofia");
   });
 
   test("apadrinhada tem carimbo e pendente tem selo; ficam no fim", async ({ page }) => {
     await page.goto("/cartinhas");
-    const cards = page.getByTestId("card-cartinha");
+    const cards = page.getByTestId("card-cartinha").filter({ visible: true });
     await expect(cards.nth(10)).toContainText("Aguardando confirmação");
     await expect(cards.nth(11)).toContainText("Apadrinhada");
   });
@@ -56,7 +56,7 @@ test.describe("lista de cartinhas", () => {
 
   test("imagem tem alt sem o nome da criança", async ({ page }) => {
     await page.goto("/cartinhas");
-    const alt = await page.getByTestId("card-cartinha").first().locator("img").getAttribute("alt");
+    const alt = await page.getByTestId("card-cartinha").filter({ visible: true }).first().locator("img").getAttribute("alt");
     expect(alt).toMatch(/^Cartinha C\d{3}, criança de \d+ anos?$/);
   });
 });
