@@ -44,15 +44,25 @@ export function FormLogin() {
           className="min-h-12 rounded-xl border border-tinta/25 bg-white px-4 text-base outline-none focus:border-pinheiro"
         />
       </div>
+      <div className="flex flex-col gap-1">
+        <label htmlFor="senha" className="font-semibold">Senha <span className="font-normal text-tinta-suave">(se tiver)</span></label>
+        <input
+          id="senha"
+          name="senha"
+          type="password"
+          autoComplete="current-password"
+          className="min-h-12 rounded-xl border border-tinta/25 bg-white px-4 text-base outline-none focus:border-pinheiro"
+        />
+      </div>
       {estado.erro && <p role="alert" className="font-semibold text-vermelho">{estado.erro}</p>}
       <button
         type="submit"
         disabled={enviando}
         className="min-h-12 rounded-full bg-pinheiro px-6 font-semibold text-papel transition-colors hover:bg-pinheiro-escuro disabled:opacity-60"
       >
-        {enviando ? "Enviando…" : "Receber link de acesso"}
+        {enviando ? "Entrando…" : "Entrar"}
       </button>
-      <p className="text-sm text-tinta-suave">Sem senha: mandamos um link para o seu e-mail.</p>
+      <p className="text-sm text-tinta-suave">Sem senha, mandamos um link de acesso para o seu e-mail.</p>
     </form>
   );
 }

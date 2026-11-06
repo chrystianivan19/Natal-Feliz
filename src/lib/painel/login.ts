@@ -11,6 +11,16 @@ export type EstadoLogin = { enviado: boolean; erro?: string };
 export async function enviarLink(_anterior: EstadoLogin, form: FormData): Promise<EstadoLogin> {
   const email = z.email().safeParse(String(form.get("email") ?? "").trim().toLowerCase());
   if (!email.success) return { enviado: false, erro: "Confira o e-mail." };
+
+  // Com senha: entra direto, sem e-mail (o e-mail gratuito do Supabase manda poucos links por hora).
+  const senha = String(form.get("senha") ?? "");
+  if (senha) {
+    const supabase = await createServerClient();
+    const { error } = await supabase.auth.signInWithPassword({ email: email.data, password: senha });
+    if (error) return { enviado: false, erro: "E-mail ou senha não conferem." };
+    redirect("/painel");
+  }
+
   const h = await headers();
   const origem = `${h.get("x-forwarded-proto") ?? "https"}://${h.get("host")}`;
   const supabase = await createServerClient();
@@ -20,7 +30,7 @@ export async function enviarLink(_anterior: EstadoLogin, form: FormData): Promis
   });
   if (error) {
     console.error("signInWithOtp falhou", error.status, error.message);
-    if (error.status === 429) return { enviado: false, erro: "Muitos pedidos seguidos. Espere alguns minutos e tente de novo." };
+    if (error.status === 429) return { enviado: false, erro: "Limite de e-mails por hora atingido. Entre com a senha ou tente daqui a uma hora." };
     return { enviado: false, erro: "Não conseguimos enviar agora. Tente de novo em alguns minutos." };
   }
   return { enviado: true };

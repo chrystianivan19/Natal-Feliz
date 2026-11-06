@@ -23,7 +23,7 @@ test.describe("acesso ao painel", () => {
     expect(r?.headers()["x-robots-tag"]).toContain("noindex");
     const email = page.getByLabel("Seu e-mail");
     expect(await email.getAttribute("type")).toBe("email");
-    await expect(page.getByRole("button", { name: "Receber link de acesso" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Entrar" })).toBeVisible();
   });
 
   test("robots.txt bloqueia /painel", async ({ request }) => {
