@@ -55,20 +55,20 @@ test.describe("página da cartinha e adoção", () => {
     await form.getByLabel("E-mail").fill("e2e@teste.dev");
     await form.getByLabel(/Me comprometo/).check();
     await form.getByRole("button", { name: "Confirmar" }).click();
-    await expect(page.getByText("Recebemos seu pedido")).toBeVisible();
+    await expect(page.getByText("A cartinha é sua")).toBeVisible();
     await expect(page.getByText(/23\/12/).first()).toBeVisible();
     await expect(page.getByTestId("confirmacao")).toContainText("C001");
   });
 
-  test("depois da adoção, a C001 aparece aguardando e sem botão", async ({ page }) => {
+  test("depois da adoção, a C001 aparece apadrinhada e sem botão", async ({ page }) => {
     await page.goto("/cartinhas/C001");
-    await expect(page.getByText("Aguardando confirmação").first()).toBeVisible();
+    await expect(page.getByText("Apadrinhada").first()).toBeVisible();
     await expect(page.getByRole("button", { name: "Quero apadrinhar" })).toHaveCount(0);
     await page.goto("/cartinhas");
     // Espera a lista com filtros substituir o fallback do Suspense.
     await expect(page.getByRole("searchbox", { name: "Buscar cartinha" })).toBeVisible();
     await expect(page.getByTestId("card-cartinha")).toHaveCount(12);
-    await expect(page.getByTestId("card-cartinha").filter({ hasText: "C001" })).toContainText("Aguardando confirmação");
+    await expect(page.getByTestId("card-cartinha").filter({ hasText: "C001" })).toContainText("Apadrinhada");
   });
 
   test("cartinha apadrinhada mostra carimbo e não tem botão", async ({ page }) => {

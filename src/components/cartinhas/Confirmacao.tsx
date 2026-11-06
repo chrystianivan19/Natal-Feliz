@@ -5,10 +5,10 @@ export function Confirmacao({ codigo, pontos }: { codigo: string; pontos: PontoE
   return (
     <div data-testid="confirmacao" className="flex flex-col gap-4">
       <Envelope className="mx-auto w-28" />
-      <h2 className="text-center text-4xl">Recebemos seu pedido</h2>
+      <h2 className="text-center text-4xl">A cartinha é sua</h2>
       <p>
-        A cartinha <strong>{codigo}</strong> fica reservada para você. A equipe confirma em até 24 horas por e-mail e
-        WhatsApp.
+        Obrigado! A cartinha <strong>{codigo}</strong> agora está apadrinhada por você. Mandamos estas instruções para o
+        seu e-mail.
       </p>
       <div className="rounded-xl border border-dashed border-dourado bg-papel p-4">
         <p className="font-semibold">O que fazer agora</p>

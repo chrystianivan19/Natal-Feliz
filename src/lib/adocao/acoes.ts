@@ -5,12 +5,40 @@ import { headers } from "next/headers";
 import { updateTag } from "next/cache";
 import { createPublicClient } from "@/lib/supabase/publico";
 import { validarAdocao, type CampoAdocao } from "./schema";
+import { obterCartinha } from "@/lib/dados/cartinhas";
+import { listarPontos } from "@/lib/dados/conteudo";
+import { montarEmailAprovacao } from "@/lib/email/aprovacao";
+import { enviarEmail } from "@/lib/email/enviar";
 
 export type EstadoAdocao =
   | { resultado: "inicial" }
   | { resultado: "ok"; codigo: string }
   | { resultado: "indisponivel" | "limite" | "erro" }
   | { resultado: "invalido"; erros: Partial<Record<CampoAdocao, string>>; valores: Record<string, string> };
+
+/** E-mail com as instruções. Falha de envio não desfaz a adoção (a tela já mostra tudo). */
+async function enviarConfirmacao(codigo: string, d: { nome: string; whatsapp: string; email: string }) {
+  try {
+    const [c, pontos] = await Promise.all([obterCartinha(codigo), listarPontos()]);
+    if (!c) return;
+    const email = montarEmailAprovacao(
+      {
+        padrinhoNome: d.nome,
+        padrinhoWhatsapp: d.whatsapp,
+        codigo: c.codigo,
+        primeiroNome: c.primeiroNome,
+        pedido: c.pedido,
+        tamanhoRoupa: c.tamanhoRoupa,
+        tamanhoCalcado: c.tamanhoCalcado,
+      },
+      pontos,
+    );
+    const r = await enviarEmail({ para: d.email, nomePara: d.nome, ...email });
+    if (!r.ok) console.warn("e-mail de confirmação não enviado:", r.motivo);
+  } catch (e) {
+    console.warn("e-mail de confirmação: erro", e instanceof Error ? e.message : e);
+  }
+}
 
 async function hashIp() {
   const h = await headers();
@@ -48,6 +76,7 @@ export async function adotar(codigo: string, _anterior: EstadoAdocao, form: Form
     }
     if (data === "ok") {
       updateTag("cartinhas");
+      await enviarConfirmacao(codigo, v.dados);
       return { resultado: "ok", codigo };
     }
     if (data === "limite") return { resultado: "limite" };

@@ -4,7 +4,7 @@ import { useActionState, useSyncExternalStore } from "react";
 import { enviarLink, type EstadoLogin } from "@/lib/painel/login";
 
 const ERROS: Record<string, string> = {
-  acesso: "Este e-mail não está na lista de voluntários. Peça para alguém da equipe incluir você.",
+  acesso: "Este e-mail não tem acesso ao painel.",
   link: "O link expirou ou já foi usado. Peça um novo.",
 };
 

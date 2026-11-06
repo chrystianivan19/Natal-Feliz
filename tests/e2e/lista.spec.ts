@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-// Depende das cartinhas de teste C001–C012 (10 disponíveis, C006 pendente, C008 apadrinhada).
+// Depende das cartinhas de teste C001–C012 (11 disponíveis, C008 apadrinhada).
 test.describe("lista de cartinhas", () => {
   test.skip(({ isMobile }) => !isMobile, "só no projeto mobile");
 
@@ -31,7 +31,7 @@ test.describe("lista de cartinhas", () => {
     await page.goto("/cartinhas?faixa=7-9");
     await expect(page.getByTestId("card-cartinha").filter({ visible: true })).toHaveCount(4);
     await page.getByRole("button", { name: "Só disponíveis" }).click();
-    await expect(page.getByTestId("card-cartinha").filter({ visible: true })).toHaveCount(3);
+    await expect(page.getByTestId("card-cartinha").filter({ visible: true })).toHaveCount(4);
   });
 
   test("busca por pedido", async ({ page }) => {
@@ -41,11 +41,11 @@ test.describe("lista de cartinhas", () => {
     await expect(page.getByTestId("card-cartinha").filter({ visible: true })).toContainText("Sofia");
   });
 
-  test("apadrinhada tem carimbo e pendente tem selo; ficam no fim", async ({ page }) => {
+  test("apadrinhada tem carimbo e fica no fim", async ({ page }) => {
     await page.goto("/cartinhas");
     const cards = page.getByTestId("card-cartinha").filter({ visible: true });
-    await expect(cards.nth(10)).toContainText("Aguardando confirmação");
     await expect(cards.nth(11)).toContainText("Apadrinhada");
+    await expect(cards.nth(11)).toContainText("C008");
   });
 
   test("card abre a página da cartinha", async ({ page }) => {

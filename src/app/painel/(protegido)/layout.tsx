@@ -2,12 +2,10 @@ import Link from "next/link";
 import { sair } from "@/lib/painel/login";
 
 const ITENS = [
-  { href: "/painel", rotulo: "Pendentes" },
+  { href: "/painel/padrinhos", rotulo: "Padrinhos" },
   { href: "/painel/cartinhas", rotulo: "Cartinhas" },
   { href: "/painel/importar", rotulo: "Importar" },
-  { href: "/painel/padrinhos", rotulo: "Padrinhos" },
   { href: "/painel/conteudo", rotulo: "Conteúdo" },
-  { href: "/painel/voluntarios", rotulo: "Voluntários" },
   { href: "/painel/historico", rotulo: "Histórico" },
 ];
 

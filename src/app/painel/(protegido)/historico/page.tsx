@@ -6,6 +6,7 @@ export const metadata: Metadata = { title: "Histórico · Painel" };
 export const instant = false;
 
 const ACAO: Record<string, string> = {
+  adotada: "Adotada pelo site",
   pedido: "Pedido de adoção",
   aprovada: "Aprovada",
   recusada: "Recusada",
