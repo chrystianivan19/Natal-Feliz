@@ -37,3 +37,14 @@ export async function cartinhasPublicas(): Promise<CartinhaPublica[]> {
 
 /** Cartinha só de teste, criada por supabase/tests/semear-e2e.sql e apagada por limpar-e2e.sql. */
 export const CARTINHA_E2E = { codigo: "C980", nome: "Teste", idade: 7, pedido: "Boneca de teste", roupa: "8", calcado: "30" };
+
+export async function pontosAtivos(): Promise<{ id: string; nome: string }[]> {
+  const env = lerEnv();
+  const url = `${env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/pontos_entrega?select=id,nome&ativo=eq.true&order=ordem`;
+  const r = await fetch(url, { headers: { apikey: env.NEXT_PUBLIC_SUPABASE_ANON_KEY } });
+  if (!r.ok) throw new Error(`Falha ao ler pontos: ${r.status}`);
+  return r.json();
+}
+
+/** Cartinha C981 já adotada (semear-e2e.sql), usada no teste de agendamento. */
+export const ADOCAO_E2E = { codigo: "C981", whatsapp: "61 99999-0981" };

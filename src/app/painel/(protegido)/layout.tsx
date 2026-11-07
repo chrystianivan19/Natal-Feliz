@@ -3,6 +3,7 @@ import { sair } from "@/lib/painel/login";
 
 const ITENS = [
   { href: "/painel/padrinhos", rotulo: "Padrinhos" },
+  { href: "/painel/reservas", rotulo: "Reservas" },
   { href: "/painel/cartinhas", rotulo: "Cartinhas" },
   { href: "/painel/importar", rotulo: "Importar" },
   { href: "/painel/conteudo", rotulo: "Conteúdo" },

@@ -82,8 +82,27 @@ export type Database = {
         ]
       >;
       pontos_entrega: Tabela<
-        { id: string; nome: string; endereco: string; horario: string | null; maps_url: string | null; ordem: number; ativo: boolean },
-        "id" | "horario" | "maps_url" | "ordem" | "ativo"
+        {
+          id: string;
+          nome: string;
+          endereco: string;
+          horario: string | null;
+          maps_url: string | null;
+          telefone: string | null;
+          referencia: string | null;
+          logo_path: string | null;
+          ordem: number;
+          ativo: boolean;
+        },
+        "id" | "horario" | "maps_url" | "telefone" | "referencia" | "logo_path" | "ordem" | "ativo"
+      >;
+      reservas_entrega: Tabela<
+        { id: string; adocao_id: string; ponto_id: string; dia: string; hora: number; criado_em: string; atualizado_em: string },
+        "id" | "criado_em" | "atualizado_em",
+        [
+          { foreignKeyName: "reservas_entrega_adocao_id_fkey"; columns: ["adocao_id"]; isOneToOne: true; referencedRelation: "adocoes"; referencedColumns: ["id"] },
+          { foreignKeyName: "reservas_entrega_ponto_id_fkey"; columns: ["ponto_id"]; isOneToOne: false; referencedRelation: "pontos_entrega"; referencedColumns: ["id"] },
+        ]
       >;
       patrocinadores: Tabela<
         { id: string; nome: string; logo_path: string | null; link: string | null; ordem: number; ativo: boolean },
@@ -123,6 +142,10 @@ export type Database = {
       };
       decidir_adocao: { Args: { p_adocao_id: string; p_acao: string }; Returns: string };
       expirar_pendentes: { Args: never; Returns: number };
+      reservar_entrega: {
+        Args: { p_codigo: string; p_whatsapp: string; p_ponto: string; p_dia: string; p_hora: number; p_ip_hash: string };
+        Returns: string;
+      };
     };
     Enums: { genero_t: GeneroT; status_adocao_t: StatusAdocaoT; status_cartinha_t: StatusCartinhaT };
     CompositeTypes: { [_ in never]: never };

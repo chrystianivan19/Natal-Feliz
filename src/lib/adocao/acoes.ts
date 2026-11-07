@@ -1,8 +1,7 @@
 "use server";
 
-import { createHash } from "node:crypto";
-import { headers } from "next/headers";
 import { updateTag } from "next/cache";
+import { hashIp } from "@/lib/rede/ip";
 import { createPublicClient } from "@/lib/supabase/publico";
 import { validarAdocao, type CampoAdocao } from "./schema";
 import { obterCartinha } from "@/lib/dados/cartinhas";
@@ -38,12 +37,6 @@ async function enviarConfirmacao(codigo: string, d: { nome: string; whatsapp: st
   } catch (e) {
     console.warn("e-mail de confirmação: erro", e instanceof Error ? e.message : e);
   }
-}
-
-async function hashIp() {
-  const h = await headers();
-  const ip = h.get("x-forwarded-for")?.split(",")[0]?.trim() || h.get("x-real-ip") || "local";
-  return createHash("sha256").update(`${ip}:${process.env.IP_HASH_SALT ?? ""}`).digest("hex");
 }
 
 /** Server Action do formulário "Quero apadrinhar". Usada com useActionState. */
