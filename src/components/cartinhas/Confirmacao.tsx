@@ -15,8 +15,14 @@ export function Confirmacao({ codigo, pontos }: { codigo: string; pontos: PontoE
         <ol className="mt-1 list-decimal space-y-1 pl-5">
           <li>Compre o presente do pedido.</li>
           <li>Escreva o código <strong>{codigo}</strong> no pacote.</li>
-          <li>Entregue até <strong>23/12</strong> num ponto de coleta.</li>
+          <li>Marque o dia e o horário da entrega (até <strong>23/12</strong>).</li>
         </ol>
+        <a
+          href={`/entrega?codigo=${codigo}`}
+          className="mt-3 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-pinheiro px-6 font-semibold text-papel hover:bg-pinheiro-escuro"
+        >
+          Agendar a entrega
+        </a>
       </div>
       <div>
         <p className="font-semibold">Pontos de coleta</p>

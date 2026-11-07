@@ -12,7 +12,7 @@ const adocao = {
   tamanhoCalcado: "30",
 };
 const pontos = [
-  { id: "1", nome: "Igreja Central", endereco: "Setor Leste, Gama", horario: "seg a sex, 8h–18h", mapsUrl: "https://maps" },
+  { id: "1", nome: "Igreja Central", endereco: "Setor Leste, Gama", horario: "seg a sex, 8h–18h", mapsUrl: "https://maps", telefone: null, referencia: null, logoUrl: null },
 ];
 
 describe("linkWhatsappAprovacao", () => {

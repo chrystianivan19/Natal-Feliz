@@ -231,3 +231,9 @@ O README documenta esse caminho passo a passo.
 | 06/11/2026 | **Adoção imediata, sem aprovação.** O pedido já vira "apadrinhada", o padrinho recebe o e-mail na hora, sem expiração de 24 h. Limite de 3 adoções ativas por WhatsApp/e-mail; canceladas não contam. | Decisão do usuário. Substitui §4 "Estados", "Expiração" e "Aprovação". |
 | 06/11/2026 | **Painel só para o organizador.** Saem as telas Pendentes e Voluntários; a tela inicial é Padrinhos. A tabela `voluntarios` continua como lista de acesso (só o e-mail do organizador). | Decisão do usuário. Substitui §5 "Pendentes" e "Voluntários". |
 | 06/11/2026 | Fotos comprimidas no navegador e enviadas direto ao Storage. | Limite de 4,5 MB por requisição na Vercel. |
+
+### Agendamento da entrega (07/11/2026, pedido do usuário)
+- Página Entrega mostra os pontos em cartões no mesmo estilo das cartinhas (logo ou iniciais, nome, endereço, referência).
+- Ao tocar, abre um painel com endereço/mapa/telefone, escolha do **dia** (de hoje até o prazo) e da **faixa de 1 hora** (09:00–10:00 … 20:00–21:00).
+- O padrinho se identifica com **código da cartinha + WhatsApp da adoção**; sem limite por faixa; reservar de novo troca a reserva anterior (uma por adoção).
+- Painel: aba **Reservas** (por dia, filtro por ponto, lista de quem ainda não marcou com link de WhatsApp) e cadastro de pontos em **Conteúdo** (nome, endereço, link do Maps, telefone, referência, logo, ordem, aparece no site).
