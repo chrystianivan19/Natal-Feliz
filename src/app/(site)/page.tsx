@@ -28,8 +28,7 @@ export default function Inicio() {
         <h2 className="text-3xl">Como funciona</h2>
         <ol className="mt-3 list-decimal space-y-1 pl-5">
           <li>Leia as cartinhas e escolha uma.</li>
-          <li>Deixe seu nome, WhatsApp e e-mail.</li>
-          <li>A equipe confirma em até 24 horas.</li>
+          <li>Deixe seu nome, WhatsApp e e-mail. A cartinha fica sua na hora.</li>
           <li>Entregue o presente até 23/12 num ponto de coleta.</li>
         </ol>
       </CardVidro>

@@ -82,7 +82,7 @@ export function FormAdocao({ codigo, pontos, disponivel }: { codigo: string; pon
             </div>
           ) : (
             <form action={acao} noValidate className="flex flex-col gap-4">
-              <p className="text-tinta-suave">Deixe seu contato para a equipe confirmar. Seus dados não aparecem no site.</p>
+              <p className="text-tinta-suave">Deixe seu contato para receber as instruções de entrega. Seus dados não aparecem no site.</p>
               <Campo id="nome" rotulo="Seu nome" autoComplete="name" required valor={valores?.nome} erro={erros.nome} />
               <Campo
                 id="whatsapp"

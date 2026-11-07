@@ -29,5 +29,5 @@ test("10 adoções simultâneas da mesma carta: só 1 ok, 9 indisponivel", async
   expect(resultados.filter((r) => r === "indisponivel")).toHaveLength(9);
 
   const depois = await anon.from("cartinhas_publicas").select("status").eq("codigo", "C990").single();
-  expect(depois.data?.status).toBe("pendente");
+  expect(depois.data?.status).toBe("apadrinhada");
 });

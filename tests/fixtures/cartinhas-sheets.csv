@@ -1,0 +1,6 @@
+﻿codigo;primeiro_nome;idade;genero;pedido;tamanho_roupa;tamanho_calcado;observacoes
+C001;Ana;7;Menina;Boneca com acessórios;8;30;EXEMPLO - apague esta linha
+c002;João;9;MENINO;"Bola de futebol; tamanho 5";10;33;
+C003;Maria;sete;Menina;Kit de pintura;6;27;
+C004;Helena;2;menina;Livro com som;;21;irmã da C003
+

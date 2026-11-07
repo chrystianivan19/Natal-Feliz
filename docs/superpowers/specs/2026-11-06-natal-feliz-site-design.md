@@ -221,3 +221,13 @@ Metadados por página, Open Graph com imagem 1200×630 de papel de carta ("NATAL
 | `Vídeos` | Recebe o MP4 renderizado; o mesmo arquivo é enviado em Painel → Conteúdo → Vídeo |
 
 O README documenta esse caminho passo a passo.
+
+## 15. Mudanças aprovadas depois da spec
+
+| Data | Mudança | Motivo |
+|---|---|---|
+| 06/11/2026 | Sem `SUPABASE_SERVICE_ROLE_KEY`: o site usa só a chave pública e a sessão do voluntário (RLS). Testes de banco rodam em SQL pelo conector. | Decisão do usuário; menos segredos para guardar. |
+| 06/11/2026 | E-mail pelo Brevo (remetente Gmail verificado) no lugar do Resend. | Resend sem domínio próprio só envia ao dono da conta. |
+| 06/11/2026 | **Adoção imediata, sem aprovação.** O pedido já vira "apadrinhada", o padrinho recebe o e-mail na hora, sem expiração de 24 h. Limite de 3 adoções ativas por WhatsApp/e-mail; canceladas não contam. | Decisão do usuário. Substitui §4 "Estados", "Expiração" e "Aprovação". |
+| 06/11/2026 | **Painel só para o organizador.** Saem as telas Pendentes e Voluntários; a tela inicial é Padrinhos. A tabela `voluntarios` continua como lista de acesso (só o e-mail do organizador). | Decisão do usuário. Substitui §5 "Pendentes" e "Voluntários". |
+| 06/11/2026 | Fotos comprimidas no navegador e enviadas direto ao Storage. | Limite de 4,5 MB por requisição na Vercel. |

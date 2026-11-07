@@ -76,7 +76,10 @@ export type Database = {
       >;
       historico: Tabela<
         { id: number; adocao_id: string | null; acao: string; voluntario_email: string | null; quando: string; detalhe: string | null },
-        "id" | "adocao_id" | "voluntario_email" | "quando" | "detalhe"
+        "id" | "adocao_id" | "voluntario_email" | "quando" | "detalhe",
+        [
+          { foreignKeyName: "historico_adocao_id_fkey"; columns: ["adocao_id"]; isOneToOne: false; referencedRelation: "adocoes"; referencedColumns: ["id"] },
+        ]
       >;
       pontos_entrega: Tabela<
         { id: string; nome: string; endereco: string; horario: string | null; maps_url: string | null; ordem: number; ativo: boolean },
