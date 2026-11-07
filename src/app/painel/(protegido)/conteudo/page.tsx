@@ -7,38 +7,36 @@ export const instant = false;
 
 export default async function PaginaConteudo() {
   const { supabase } = await exigirVoluntario();
-  const { data: pontos } = await supabase.from("pontos_entrega").select("id, nome, endereco, telefone, ativo").order("ordem");
-
+  const [pontos, patrocinadores, edicoes, { data: config }] = await Promise.all([
+    supabase.from("pontos_entrega").select("id", { count: "exact", head: true }),
+    supabase.from("patrocinadores").select("id", { count: "exact", head: true }),
+    supabase.from("edicoes").select("id", { count: "exact", head: true }),
+    supabase.from("configuracoes").select("pix_chave, whatsapp_contato, video_url").eq("id", 1).maybeSingle(),
+  ]);
+  const itens = [
+    {
+      href: "/painel/conteudo/geral",
+      titulo: "Pix, contato e datas",
+      resumo: [config?.pix_chave ? "Pix ok" : "sem Pix", config?.whatsapp_contato ? "contato ok" : "sem contato", config?.video_url ? "vídeo ok" : "sem vídeo"].join(" · "),
+    },
+    { href: "/painel/conteudo/pontos", titulo: "Pontos de entrega", resumo: `${pontos.count ?? 0} cadastrados` },
+    { href: "/painel/conteudo/patrocinadores", titulo: "Patrocinadores", resumo: `${patrocinadores.count ?? 0} cadastrados` },
+    { href: "/painel/conteudo/edicoes", titulo: "Edições anteriores e fotos", resumo: `${edicoes.count ?? 0} edições` },
+  ];
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4">
       <h1 className="text-4xl">Conteúdo do site</h1>
-      <section className="flex flex-col gap-3">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-3xl">Pontos de entrega</h2>
-          <Link href="/painel/conteudo/pontos/novo" className="inline-flex min-h-11 items-center rounded-full bg-pinheiro px-5 font-semibold text-papel hover:bg-pinheiro-escuro">
-            Novo ponto
-          </Link>
-        </div>
-        {!pontos?.length && <p className="rounded-2xl border border-tinta/10 bg-white p-4">Nenhum ponto cadastrado.</p>}
-        <ul className="flex flex-col gap-2">
-          {(pontos ?? []).map((p) => (
-            <li key={p.id}>
-              <Link href={`/painel/conteudo/pontos/${p.id}`} className="flex flex-col rounded-2xl border border-tinta/10 bg-white p-4 hover:border-pinheiro">
-                <span className="font-semibold">
-                  {p.nome} {!p.ativo && <span className="ml-1 rounded-full bg-papel-escuro px-2 py-0.5 text-xs">fora do site</span>}
-                </span>
-                <span className="text-sm text-tinta-suave">
-                  {p.endereco}
-                  {p.telefone ? ` · ${p.telefone}` : ""}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-      <p className="rounded-2xl border border-dashed border-dourado bg-papel p-4 text-tinta-suave">
-        Pix, patrocinadores, edições anteriores e WhatsApp de contato chegam aqui em seguida.
-      </p>
+      <p className="text-tinta-suave">Bloco vazio não aparece no site. Preencheu, aparece na hora.</p>
+      <ul className="grid gap-3 sm:grid-cols-2">
+        {itens.map((i) => (
+          <li key={i.href}>
+            <Link href={i.href} className="flex min-h-24 flex-col justify-center rounded-2xl border border-tinta/10 bg-white p-4 hover:border-pinheiro">
+              <span className="text-2xl">{i.titulo}</span>
+              <span className="text-sm text-tinta-suave">{i.resumo}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

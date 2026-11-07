@@ -113,7 +113,7 @@ export function BotaoExcluirPonto({ id, nome }: { id: string; nome: string }) {
           if (!confirm(`Excluir o ponto “${nome}”?`)) return;
           iniciar(async () => {
             const r = await excluirPonto(id);
-            if (r.ok) router.push("/painel/conteudo");
+            if (r.ok) router.push("/painel/conteudo/pontos");
             else setMsg(r.mensagem);
           });
         }}

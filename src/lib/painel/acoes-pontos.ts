@@ -32,7 +32,7 @@ export async function salvarPonto(_anterior: EstadoPonto, f: FormData): Promise<
     : await supabase.from("pontos_entrega").insert(dados);
   if (error) return { erro: "Não foi possível salvar." };
   updateTag("pontos");
-  redirect("/painel/conteudo");
+  redirect("/painel/conteudo/pontos");
 }
 
 export async function excluirPonto(id: string): Promise<{ ok: boolean; mensagem: string }> {
