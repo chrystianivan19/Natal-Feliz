@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { cartinhasPublicas } from "./apoio";
 
 test.describe("Home, Galeria e Apoiar", () => {
   test.skip(({ isMobile }) => !isMobile, "só no projeto mobile");
@@ -45,11 +46,35 @@ test.describe("Home, Galeria e Apoiar", () => {
     await expect(bloco.getByRole("button", { name: "Copiar chave Pix" })).toBeVisible({ timeout: 4000 });
   });
 
+  test("Apoiar: Pix da caixa de bombom copia o código com o valor fixo", async ({ page, context }) => {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await page.goto("/apoiar");
+    const bloco = page.getByTestId("bloco-bombom");
+    await expect(bloco.getByRole("heading", { name: "Uma caixa de bombom para cada criança" })).toBeVisible();
+    const botao = bloco.getByRole("button", { name: /^Copiar Pix de R\$/ });
+    test.skip((await botao.count()) === 0, "sem chave Pix cadastrada");
+    await botao.click();
+    await expect(bloco.getByRole("button", { name: "Código copiado" })).toBeVisible();
+    const codigo = await page.evaluate(() => navigator.clipboard.readText());
+    expect(codigo.startsWith("000201")).toBe(true);
+    expect(codigo).toMatch(/54\d\d\d+\.\d\d5802BR/);
+  });
+
+  test("Apoiar: contador de caixas usa o número de cartinhas", async ({ page }) => {
+    const total = (await cartinhasPublicas()).length;
+    test.skip(total === 0, "sem cartinhas");
+    await page.goto("/apoiar");
+    const numeros = page.getByTestId("contador-caixas-numeros").locator("dd");
+    await expect(numeros.nth(0)).toHaveText(String(total));
+    const temos = Number(await numeros.nth(1).innerText());
+    await expect(numeros.nth(2)).toHaveText(String(Math.max(total - temos, 0)));
+  });
+
   test("Entrega: Ver no mapa aponta para o Google Maps", async ({ page }) => {
     await page.goto("/entrega");
     const cartao = page.getByTestId("card-ponto").first();
     test.skip((await cartao.count()) === 0, "sem pontos");
     await cartao.getByRole("button").click();
-    await expect(page.getByRole("dialog").getByRole("link", { name: "Ver no mapa" })).toHaveAttribute("href", /google\.com\/maps|maps\.app\.goo\.gl/);
+    await expect(page.getByRole("dialog").getByRole("link", { name: "Ver no mapa" })).toHaveAttribute("href", /google\.com\/maps|maps\.app\.goo\.gl|share\.google/);
   });
 });

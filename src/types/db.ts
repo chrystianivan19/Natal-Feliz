@@ -45,6 +45,8 @@ type ConfiguracaoRow = {
   prazo_entrega: string;
   video_url: string | null;
   video_capa_path: string | null;
+  bombom_valor: number;
+  bombom_recebidas: number;
 };
 
 export type Database = {

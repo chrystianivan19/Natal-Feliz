@@ -1,5 +1,5 @@
 /**
- * Pix "copia e cola" estático (BR Code / EMV MPM), sem valor fixo: a pessoa digita quanto quer doar.
+ * Pix "copia e cola" estático (BR Code / EMV MPM). Valor fixo é opcional (campo 54).
  * Manual de Padrões para Iniciação do Pix (BCB), seção do QR Code estático.
  */
 
@@ -58,12 +58,15 @@ export function gerarPayloadPix({
   recebedor,
   cidade,
   txid = "***",
+  valor,
 }: {
   chave: string;
   tipo?: TipoChave | null;
   recebedor: string;
   cidade: string;
   txid?: string;
+  /** Valor fixo em reais. Sem valor, a pessoa digita quanto quer no app do banco. */
+  valor?: number;
 }): string {
   const conta = campo("00", "br.gov.bcb.pix") + campo("01", normalizarChave(chave, tipo));
   const semCrc =
@@ -71,6 +74,7 @@ export function gerarPayloadPix({
     campo("26", conta) +
     campo("52", "0000") +
     campo("53", "986") +
+    (valor && valor > 0 ? campo("54", valor.toFixed(2)) : "") +
     campo("58", "BR") +
     campo("59", limpar(recebedor, 25) || "NATAL FELIZ") +
     campo("60", limpar(cidade, 15) || "GAMA") +

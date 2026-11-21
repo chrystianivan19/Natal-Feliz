@@ -27,6 +27,10 @@ export async function salvarGeral(_anterior: EstadoConteudo, f: FormData): Promi
   const video = texto(f, "video_url");
   if (video && !/^https:\/\//.test(video)) return { erro: "O link do vídeo precisa começar com https://" };
   const tipo = texto(f, "pix_tipo");
+  const bombom = Number(texto(f, "bombom_valor").replace(",", "."));
+  if (!Number.isFinite(bombom) || bombom < 0) return { erro: "Valor da caixa de bombom inválido." };
+  const recebidas = Number(texto(f, "bombom_recebidas") || 0);
+  if (!Number.isInteger(recebidas) || recebidas < 0) return { erro: "Número de caixas recebidas inválido." };
 
   const { error } = await supabase
     .from("configuracoes")
@@ -40,6 +44,8 @@ export async function salvarGeral(_anterior: EstadoConteudo, f: FormData): Promi
       evento_data_hora: `${data}T${hora}:00-03:00`,
       prazo_entrega: prazo,
       video_url: ouNull(video),
+      bombom_valor: Math.round(bombom * 100) / 100,
+      bombom_recebidas: recebidas,
       ...(texto(f, "video_capa_path") ? { video_capa_path: texto(f, "video_capa_path") } : {}),
       ...(f.get("remover_capa") === "on" ? { video_capa_path: null } : {}),
     })

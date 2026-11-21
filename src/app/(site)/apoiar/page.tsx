@@ -2,15 +2,18 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { BlocoPix } from "@/components/home/BlocoPix";
+import { BlocoBombom } from "@/components/apoiar/BlocoBombom";
+import { obterContador } from "@/lib/dados/contador";
+import { rotuloDia } from "@/lib/entrega/agenda";
 import { listarPatrocinadores, obterConfiguracoes } from "@/lib/dados/conteudo";
 
 export const metadata: Metadata = {
   title: "Apoiar",
-  description: "Doe pelo Pix ou patrocine o Natal Feliz no Gama-DF.",
+  description: "Doe uma caixa de bombom, faça um Pix ou patrocine o Natal Feliz no Gama-DF.",
 };
 
 export default async function PaginaApoiar() {
-  const [config, patrocinadores] = await Promise.all([obterConfiguracoes(), listarPatrocinadores()]);
+  const [config, patrocinadores, contagem] = await Promise.all([obterConfiguracoes(), listarPatrocinadores(), obterContador()]);
   const zap = config.whatsappContato;
   const linkZap = zap
     ? `https://wa.me/55${zap}?text=${encodeURIComponent("Oi! Quero saber como patrocinar o Natal Feliz.")}`
@@ -21,11 +24,14 @@ export default async function PaginaApoiar() {
       <header className="flex flex-col gap-2">
         <h1 className="text-5xl md:text-7xl">Apoiar</h1>
         <p className="max-w-prose">
-          Nem todo mundo consegue adotar uma cartinha, e tudo bem. Dá para ajudar com uma doação ou com a sua empresa.
+          Nem todo mundo consegue adotar uma cartinha, e tudo bem. Dá para ajudar com uma caixa de bombom, com uma doação
+          ou com a sua empresa.
         </p>
       </header>
 
-      <BlocoPix pix={config.pix} />
+      <BlocoBombom pix={config.pix} valor={config.bombomValor} criancas={contagem.total} recebidas={config.bombomRecebidas} prazo={rotuloDia(config.prazoEntrega).data} />
+
+      <BlocoPix pix={config.pix} titulo="Doe qualquer valor" />
 
       {!config.pix && (
         <p className="max-w-prose">

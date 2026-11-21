@@ -56,6 +56,16 @@ describe("gerarPayloadPix", () => {
     expect(campos(t.get("62")!).get("05")).toBe("NATAL2026");
   });
 
+  test("sem valor não tem campo 54; com valor fixo vem 54 com duas casas, antes do país", () => {
+    expect(c.has("54")).toBe(false);
+    const comValor = gerarPayloadPix({ chave: "x@y.com", recebedor: "A", cidade: "B", valor: 15 });
+    const cv = campos(comValor);
+    expect(cv.get("54")).toBe("15.00");
+    expect(comValor.indexOf("540515.00")).toBeLessThan(comValor.indexOf("5802BR"));
+    expect(comValor.slice(-4)).toBe(crc16(comValor.slice(0, -4)));
+    expect(campos(gerarPayloadPix({ chave: "x@y.com", recebedor: "A", cidade: "B", valor: 12.5 })).get("54")).toBe("12.50");
+  });
+
   test("chave de telefone ganha +55 e CPF/CNPJ fica só com dígitos", () => {
     expect(campos(campos(gerarPayloadPix({ chave: "(61) 99999-8888", recebedor: "A", cidade: "B" })).get("26")!).get("01")).toBe("+5561999998888");
     expect(campos(campos(gerarPayloadPix({ chave: "123.456.789-09", recebedor: "A", cidade: "B" })).get("26")!).get("01")).toBe("12345678909");
