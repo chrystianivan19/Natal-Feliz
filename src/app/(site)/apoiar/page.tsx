@@ -29,7 +29,7 @@ export default async function PaginaApoiar() {
         </p>
       </header>
 
-      <BlocoBombom pix={config.pix} valor={config.bombomValor} criancas={contagem.total} prazo={rotuloDia(config.prazoEntrega).data} />
+      <BlocoBombom pix={config.pix} valor={config.bombomValor} criancas={contagem.total} recebidas={config.bombomRecebidas} prazo={rotuloDia(config.prazoEntrega).data} />
 
       <BlocoPix pix={config.pix} titulo="Doe qualquer valor" />
 

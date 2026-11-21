@@ -4,11 +4,26 @@ import { gerarPayloadPix, type TipoChave } from "@/lib/pix/brcode";
 import { qrPix } from "@/lib/pix/qr";
 import { BotaoCopiar } from "@/components/home/BotaoCopiar";
 import { Selo } from "@/components/papel/Selo";
+import { Contador, ROTULOS_CAIXAS } from "@/components/home/Contador";
+import { contarCaixas } from "@/lib/bombom/caixas";
 
 const reais = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 /** Caixa de bombom: uma por criança. Entrega no ponto de coleta ou Pix com valor fixo. */
-export async function BlocoBombom({ pix, valor, criancas, prazo }: { pix: Configuracoes["pix"]; valor: number; criancas: number; prazo: string }) {
+export async function BlocoBombom({
+  pix,
+  valor,
+  criancas,
+  recebidas,
+  prazo,
+}: {
+  pix: Configuracoes["pix"];
+  valor: number;
+  criancas: number;
+  recebidas: number;
+  prazo: string;
+}) {
+  const caixas = contarCaixas(criancas, recebidas);
   const payload = pix
     ? gerarPayloadPix({ chave: pix.chave, tipo: pix.tipo as TipoChave | null, recebedor: pix.recebedor, cidade: pix.cidade, valor })
     : null;
@@ -42,6 +57,10 @@ export async function BlocoBombom({ pix, valor, criancas, prazo }: { pix: Config
           </p>
         )}
       </div>
+
+      {criancas > 0 && (
+        <Contador total={caixas.total} apadrinhadas={caixas.temos} faltam={caixas.faltam} rotulos={ROTULOS_CAIXAS} testId="contador-caixas" />
+      )}
 
       <div className="grid gap-3 md:grid-cols-2">
         <div className="rounded-2xl border border-dashed border-dourado bg-papel p-4">

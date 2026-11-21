@@ -74,6 +74,7 @@ export type ValoresGeral = {
   videoUrl: string;
   videoCapaUrl: string | null;
   bombomValor: string;
+  bombomRecebidas: number;
 };
 
 export function FormGeral({ v }: { v: ValoresGeral }) {
@@ -109,6 +110,12 @@ export function FormGeral({ v }: { v: ValoresGeral }) {
         </div>
         <Campo rotulo="Valor da caixa de bombom (R$)" dica="O QR da caixa de bombom, na página Apoiar, já vem com esse valor. Use 0 para deixar a pessoa escolher.">
           <input name="bombom_valor" inputMode="decimal" defaultValue={v.bombomValor} className={campo} />
+        </Campo>
+        <Campo
+          rotulo="Caixas de bombom que já temos"
+          dica="Some os Pix da caixa de bombom e as caixas que chegaram nos pontos. O site mostra “temos” e “faltam” com base no número de cartinhas."
+        >
+          <input name="bombom_recebidas" type="number" inputMode="numeric" min={0} step={1} defaultValue={v.bombomRecebidas} className={campo} />
         </Campo>
       </fieldset>
 

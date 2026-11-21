@@ -106,6 +106,7 @@ export type Configuracoes = {
   videoUrl: string | null;
   videoCapaUrl: string | null;
   bombomValor: number;
+  bombomRecebidas: number;
 };
 
 export async function obterConfiguracoes(): Promise<Configuracoes> {
@@ -124,5 +125,6 @@ export async function obterConfiguracoes(): Promise<Configuracoes> {
     videoUrl: c?.video_url ?? null,
     videoCapaUrl: urlImagem("galeria", c?.video_capa_path ?? null),
     bombomValor: Number(c?.bombom_valor ?? 15),
+    bombomRecebidas: Number(c?.bombom_recebidas ?? 0),
   };
 }

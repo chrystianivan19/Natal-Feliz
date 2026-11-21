@@ -48,6 +48,7 @@ export default async function PaginaGeral() {
           videoUrl: c?.video_url ?? "",
           videoCapaUrl: urlImagem("galeria", c?.video_capa_path ?? null),
           bombomValor: String(c?.bombom_valor ?? 15).replace(".", ","),
+          bombomRecebidas: c?.bombom_recebidas ?? 0,
         }}
       />
     </div>

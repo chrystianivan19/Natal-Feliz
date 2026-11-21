@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { cartinhasPublicas } from "./apoio";
 
 test.describe("Home, Galeria e Apoiar", () => {
   test.skip(({ isMobile }) => !isMobile, "só no projeto mobile");
@@ -57,6 +58,16 @@ test.describe("Home, Galeria e Apoiar", () => {
     const codigo = await page.evaluate(() => navigator.clipboard.readText());
     expect(codigo.startsWith("000201")).toBe(true);
     expect(codigo).toMatch(/54\d\d\d+\.\d\d5802BR/);
+  });
+
+  test("Apoiar: contador de caixas usa o número de cartinhas", async ({ page }) => {
+    const total = (await cartinhasPublicas()).length;
+    test.skip(total === 0, "sem cartinhas");
+    await page.goto("/apoiar");
+    const numeros = page.getByTestId("contador-caixas-numeros").locator("dd");
+    await expect(numeros.nth(0)).toHaveText(String(total));
+    const temos = Number(await numeros.nth(1).innerText());
+    await expect(numeros.nth(2)).toHaveText(String(Math.max(total - temos, 0)));
   });
 
   test("Entrega: Ver no mapa aponta para o Google Maps", async ({ page }) => {
