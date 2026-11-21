@@ -83,7 +83,7 @@ export function AgendaEntrega({ pontos, prazo }: { pontos: PontoEntrega[]; prazo
         className="mx-auto mt-auto mb-0 max-h-[92dvh] w-full max-w-lg rounded-t-3xl bg-papel p-0 text-tinta backdrop:bg-tinta/60 md:my-auto md:rounded-3xl"
       >
         {ponto && (
-          <div className="flex flex-col gap-4 overflow-y-auto p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))]">
+          <div className="flex flex-col gap-4 overflow-x-hidden overflow-y-auto p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))]">
             <div className="flex items-start justify-between gap-4">
               <p className="manuscrita text-3xl leading-tight">{ponto.nome}</p>
               <button type="button" onClick={() => painel.current?.close()} className="min-h-11 min-w-11 rounded-full border border-tinta/20 px-3 font-semibold hover:border-vermelho">
@@ -124,7 +124,82 @@ export function AgendaEntrega({ pontos, prazo }: { pontos: PontoEntrega[]; prazo
 }
 
 const chip =
-  "flex min-h-11 cursor-pointer items-center justify-center rounded-xl border border-tinta/20 bg-white px-3 text-center font-semibold transition-colors hover:border-pinheiro has-[:checked]:border-pinheiro has-[:checked]:bg-pinheiro has-[:checked]:text-papel has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-40 has-[:disabled]:hover:border-tinta/20 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-pinheiro";
+  "relative flex min-h-11 cursor-pointer items-center justify-center rounded-xl border border-tinta/20 bg-white px-3 text-center font-semibold transition-colors hover:border-pinheiro has-[:checked]:border-pinheiro has-[:checked]:bg-pinheiro has-[:checked]:text-papel has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-40 has-[:disabled]:hover:border-tinta/20 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-pinheiro";
+
+/**
+ * Dias numa faixa que rola de lado: setas ‹ › nas pontas, arrastar com o dedo ou com o mouse.
+ * As setas somem (ficam apagadas) quando não há mais dias daquele lado.
+ */
+function CarrosselDias({ dias, dia, escolher }: { dias: string[]; dia: string; escolher: (d: string) => void }) {
+  const faixa = useRef<HTMLDivElement>(null);
+  const arrasto = useRef<{ x: number; inicio: number; moveu: boolean } | null>(null);
+  const [pontas, setPontas] = useState({ inicio: true, fim: false });
+
+  function medir() {
+    const f = faixa.current;
+    if (!f) return;
+    setPontas({ inicio: f.scrollLeft <= 2, fim: f.scrollLeft + f.clientWidth >= f.scrollWidth - 2 });
+  }
+
+  function andar(sentido: 1 | -1) {
+    const f = faixa.current;
+    if (!f) return;
+    f.scrollBy({ left: sentido * f.clientWidth * 0.8, behavior: "smooth" });
+  }
+
+  const seta =
+    "flex size-11 shrink-0 items-center justify-center rounded-full border border-tinta/20 bg-white text-xl font-semibold transition-colors hover:border-pinheiro disabled:cursor-default disabled:opacity-30 disabled:hover:border-tinta/20";
+
+  return (
+    <div className="flex items-center gap-2">
+      <button type="button" onClick={() => andar(-1)} disabled={pontas.inicio} aria-label="Dias anteriores" className={seta}>
+        ‹
+      </button>
+      <div
+        ref={(el) => {
+          faixa.current = el;
+          if (el) requestAnimationFrame(medir);
+        }}
+        onScroll={medir}
+        onPointerDown={(e) => {
+          if (e.pointerType !== "mouse") return; // no toque o navegador já arrasta sozinho
+          arrasto.current = { x: e.clientX, inicio: faixa.current?.scrollLeft ?? 0, moveu: false };
+        }}
+        onPointerMove={(e) => {
+          const a = arrasto.current;
+          if (!a || !faixa.current) return;
+          const dx = e.clientX - a.x;
+          if (Math.abs(dx) > 4) a.moveu = true;
+          faixa.current.scrollLeft = a.inicio - dx;
+        }}
+        onPointerUp={() => setTimeout(() => (arrasto.current = null), 0)}
+        onPointerLeave={() => (arrasto.current = null)}
+        onClickCapture={(e) => {
+          // depois de arrastar com o mouse, soltar não deve escolher o dia
+          if (arrasto.current?.moveu) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        }}
+        className="flex min-w-0 flex-1 snap-x snap-proximity gap-2 overflow-x-auto py-1 select-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {dias.map((d) => {
+          const r = rotuloDia(d);
+          return (
+            <label key={d} className={`${chip} min-w-16 shrink-0 snap-start flex-col py-1 leading-tight`}>
+              <input type="radio" name="dia" value={d} checked={dia === d} onChange={() => escolher(d)} className="sr-only" />
+              <span className="text-xs font-normal uppercase">{r.semana}</span>
+              <span>{r.data}</span>
+            </label>
+          );
+        })}
+      </div>
+      <button type="button" onClick={() => andar(1)} disabled={pontas.fim} aria-label="Próximos dias" className={seta}>
+        ›
+      </button>
+    </div>
+  );
+}
 
 function FormReserva({ ponto, dias, codigoInicial, fechar }: { ponto: PontoEntrega; dias: string[]; codigoInicial: string; fechar: () => void }) {
   const [estado, acao, enviando] = useActionState<EstadoReserva, FormData>(reservar, { resultado: "inicial" });
@@ -171,24 +246,13 @@ function FormReserva({ ponto, dias, codigoInicial, fechar }: { ponto: PontoEntre
       }}
     >
       <input type="hidden" name="ponto" value={ponto.id} />
-      <fieldset className="flex flex-col gap-2">
+      <fieldset className="flex min-w-0 flex-col gap-2">
         <legend className="mb-2 font-semibold">Dia</legend>
-        <div className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none]">
-          {dias.map((d) => {
-            const r = rotuloDia(d);
-            return (
-              <label key={d} className={`${chip} min-w-16 shrink-0 flex-col py-1 leading-tight`}>
-                <input type="radio" name="dia" value={d} checked={dia === d} onChange={() => setDia(d)} className="sr-only" />
-                <span className="text-xs font-normal uppercase">{r.semana}</span>
-                <span>{r.data}</span>
-              </label>
-            );
-          })}
-        </div>
+        <CarrosselDias dias={dias} dia={dia} escolher={setDia} />
         {erros.dia && <p className="text-sm font-semibold text-vermelho">{erros.dia}</p>}
       </fieldset>
 
-      <fieldset className="flex flex-col gap-2">
+      <fieldset className="flex min-w-0 flex-col gap-2">
         <legend className="mb-2 font-semibold">Horário</legend>
         <div className="grid grid-cols-2 gap-2 min-[400px]:grid-cols-3">
           {HORAS.map((h) => {

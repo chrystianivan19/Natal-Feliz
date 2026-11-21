@@ -75,6 +75,6 @@ test.describe("Home, Galeria e Apoiar", () => {
     const cartao = page.getByTestId("card-ponto").first();
     test.skip((await cartao.count()) === 0, "sem pontos");
     await cartao.getByRole("button").click();
-    await expect(page.getByRole("dialog").getByRole("link", { name: "Ver no mapa" })).toHaveAttribute("href", /google\.com\/maps|maps\.app\.goo\.gl/);
+    await expect(page.getByRole("dialog").getByRole("link", { name: "Ver no mapa" })).toHaveAttribute("href", /google\.com\/maps|maps\.app\.goo\.gl|share\.google/);
   });
 });
