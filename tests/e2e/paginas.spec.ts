@@ -45,6 +45,20 @@ test.describe("Home, Galeria e Apoiar", () => {
     await expect(bloco.getByRole("button", { name: "Copiar chave Pix" })).toBeVisible({ timeout: 4000 });
   });
 
+  test("Apoiar: Pix da caixa de bombom copia o código com o valor fixo", async ({ page, context }) => {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await page.goto("/apoiar");
+    const bloco = page.getByTestId("bloco-bombom");
+    await expect(bloco.getByRole("heading", { name: "Uma caixa de bombom para cada criança" })).toBeVisible();
+    const botao = bloco.getByRole("button", { name: /^Copiar Pix de R\$/ });
+    test.skip((await botao.count()) === 0, "sem chave Pix cadastrada");
+    await botao.click();
+    await expect(bloco.getByRole("button", { name: "Código copiado" })).toBeVisible();
+    const codigo = await page.evaluate(() => navigator.clipboard.readText());
+    expect(codigo.startsWith("000201")).toBe(true);
+    expect(codigo).toMatch(/54\d\d\d+\.\d\d5802BR/);
+  });
+
   test("Entrega: Ver no mapa aponta para o Google Maps", async ({ page }) => {
     await page.goto("/entrega");
     const cartao = page.getByTestId("card-ponto").first();

@@ -47,6 +47,7 @@ export default async function PaginaGeral() {
           prazoEntrega: c?.prazo_entrega ?? "2026-12-23",
           videoUrl: c?.video_url ?? "",
           videoCapaUrl: urlImagem("galeria", c?.video_capa_path ?? null),
+          bombomValor: String(c?.bombom_valor ?? 15).replace(".", ","),
         }}
       />
     </div>

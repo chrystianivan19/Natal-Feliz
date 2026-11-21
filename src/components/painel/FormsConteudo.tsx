@@ -73,6 +73,7 @@ export type ValoresGeral = {
   prazoEntrega: string;
   videoUrl: string;
   videoCapaUrl: string | null;
+  bombomValor: string;
 };
 
 export function FormGeral({ v }: { v: ValoresGeral }) {
@@ -106,6 +107,9 @@ export function FormGeral({ v }: { v: ValoresGeral }) {
             <input name="pix_banco" defaultValue={v.pixBanco} className={campo} />
           </Campo>
         </div>
+        <Campo rotulo="Valor da caixa de bombom (R$)" dica="O QR da caixa de bombom, na página Apoiar, já vem com esse valor. Use 0 para deixar a pessoa escolher.">
+          <input name="bombom_valor" inputMode="decimal" defaultValue={v.bombomValor} className={campo} />
+        </Campo>
       </fieldset>
 
       <fieldset className="flex flex-col gap-4 rounded-2xl border border-tinta/10 bg-white p-4">
