@@ -3,6 +3,24 @@ import { expect, test } from "@playwright/test";
 test.describe("casca do site no celular", () => {
   test.skip(({ isMobile }) => !isMobile, "só no projeto mobile");
 
+  test("botão Ajuda fica no topo e abre os 3 WhatsApps da equipe", async ({ page }) => {
+    await page.goto("/cartinhas");
+    const botao = page.getByRole("button", { name: "Ajuda" });
+    const caixa = (await botao.boundingBox())!;
+    expect(caixa.height).toBeGreaterThanOrEqual(44);
+    expect(caixa.y).toBeLessThan(80);
+    await botao.click();
+    const d = page.getByRole("dialog", { name: "Precisa de ajuda?" });
+    await expect(d).toBeVisible();
+    const links = d.getByRole("link");
+    await expect(links).toHaveCount(3);
+    await expect(links.nth(0)).toHaveAttribute("href", /^https:\/\/wa\.me\/5561996526275\?text=/);
+    await expect(links.nth(1)).toHaveAttribute("href", /^https:\/\/wa\.me\/5561991053587\?text=/);
+    await expect(links.nth(2)).toHaveAttribute("href", /^https:\/\/wa\.me\/5561991663337\?text=/);
+    await page.keyboard.press("Escape");
+    await expect(d).toBeHidden();
+  });
+
   test("menu inferior tem 5 links com área de toque ≥ 44px", async ({ page }) => {
     await page.goto("/");
     const menu = page.getByRole("navigation", { name: "Menu principal" });
