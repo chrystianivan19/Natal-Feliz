@@ -237,3 +237,7 @@ O README documenta esse caminho passo a passo.
 - Ao tocar, abre um painel com endereço/mapa/telefone, escolha do **dia** (de hoje até o prazo) e da **faixa de 1 hora** (09:00–10:00 … 20:00–21:00).
 - O padrinho se identifica com **código da cartinha + WhatsApp da adoção**; sem limite por faixa; reservar de novo troca a reserva anterior (uma por adoção).
 - Painel: aba **Reservas** (por dia, filtro por ponto, lista de quem ainda não marcou com link de WhatsApp) e cadastro de pontos em **Conteúdo** (nome, endereço, link do Maps, telefone, referência, logo, ordem, aparece no site).
+
+### Sem limite por padrinho (22/11/2026, pedido do usuário)
+- O padrinho pode adotar quantas cartinhas quiser (antes: 3 por WhatsApp/e-mail). Migração 0011.
+- Continua o freio contra robôs: até 30 tentativas de adoção por aparelho (IP) por hora.

@@ -1,4 +1,4 @@
--- Testes de banco da adoção (adoção imediata, sem aprovação). Rodar inteiro numa chamada; tudo é desfeito no ROLLBACK.
+-- Testes de banco da adoção (adoção imediata, sem limite por padrinho; 30 tentativas por IP por hora). Rodar inteiro numa chamada; tudo é desfeito no ROLLBACK.
 -- Falha = erro "FALHA: ...". Sucesso = última linha 'TODOS OS TESTES PASSARAM'.
 -- Os papéis anon/authenticated são simulados com SET LOCAL ROLE e request.jwt.claims.
 begin;
@@ -34,7 +34,7 @@ select set_config('t.mail1', public.adotar_cartinha('C908', 'Padrinho', '6197777
 select set_config('t.mail2', public.adotar_cartinha('C909', 'Padrinho', '61977770002', 'madrinha@teste.dev', 'teste-ip-m2'), true);
 select set_config('t.mail3', public.adotar_cartinha('C910', 'Padrinho', '61977770003', 'madrinha@teste.dev', 'teste-ip-m3'), true);
 select set_config('t.mail4', public.adotar_cartinha('C911', 'Padrinho', '61977770004', 'MADRINHA@teste.dev', 'teste-ip-m4'), true);
-select public.adotar_cartinha('C903', 'Padrinho', '6196666000' || g, 'ip' || g || '@teste.dev', 'teste-ip-fixo') from generate_series(0, 9) g;
+select public.adotar_cartinha('C903', 'Padrinho', '619666600' || lpad(g::text, 2, '0'), 'ip' || g || '@teste.dev', 'teste-ip-fixo') from generate_series(0, 29) g;
 select set_config('t.ip11', public.adotar_cartinha('C912', 'Padrinho', '61966661111', 'ip11@teste.dev', 'teste-ip-fixo'), true);
 
 do $$
@@ -78,11 +78,11 @@ begin
   if v_qtd <> 0 then raise exception 'FALHA: gravou adoção em carta indisponível (%)', v_qtd; end if;
   if current_setting('t.inexistente') <> 'nao_encontrada' then raise exception 'FALHA inexistente: %', current_setting('t.inexistente'); end if;
 
-  if concat_ws(',', current_setting('t.zap1'), current_setting('t.zap2'), current_setting('t.zap3'), current_setting('t.zap4')) <> 'ok,ok,ok,limite'
-    then raise exception 'FALHA limite whatsapp'; end if;
-  if (select status from public.cartinhas where codigo = 'C907') <> 'disponivel' then raise exception 'FALHA: carta do limite mudou de status'; end if;
-  if concat_ws(',', current_setting('t.mail1'), current_setting('t.mail2'), current_setting('t.mail3'), current_setting('t.mail4')) <> 'ok,ok,ok,limite'
-    then raise exception 'FALHA limite email'; end if;
+  if concat_ws(',', current_setting('t.zap1'), current_setting('t.zap2'), current_setting('t.zap3'), current_setting('t.zap4')) <> 'ok,ok,ok,ok'
+    then raise exception 'FALHA: mesmo WhatsApp deveria adotar quantas quiser'; end if;
+  if (select status from public.cartinhas where codigo = 'C907') <> 'apadrinhada' then raise exception 'FALHA: quarta cartinha do mesmo padrinho não ficou apadrinhada'; end if;
+  if concat_ws(',', current_setting('t.mail1'), current_setting('t.mail2'), current_setting('t.mail3'), current_setting('t.mail4')) <> 'ok,ok,ok,ok'
+    then raise exception 'FALHA: mesmo e-mail deveria adotar quantas quiser'; end if;
   if current_setting('t.ip11') <> 'limite' then raise exception 'FALHA limite ip: %', current_setting('t.ip11'); end if;
   if exists (select 1 from cron.job where jobname = 'expirar-pendentes') then raise exception 'FALHA: tarefa de expiração ainda agendada'; end if;
 end $$;
