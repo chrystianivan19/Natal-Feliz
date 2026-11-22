@@ -8,7 +8,7 @@ import { Confirmacao } from "./Confirmacao";
 
 const MSG = {
   indisponivel: "Essa cartinha acabou de ser escolhida por outra pessoa.",
-  limite: "Você já tem 3 cartinhas aguardando confirmação. Fale com a gente pelo WhatsApp para adotar mais.",
+  limite: "Muitas tentativas seguidas deste aparelho. Espere alguns minutos e tente de novo, ou toque em Ajuda e fale com a gente.",
   erro: "Não conseguimos registrar agora. Tente em alguns minutos ou fale com a gente pelo WhatsApp.",
 };
 
