@@ -29,6 +29,7 @@ type CartinhaRow = {
   imagem_path: string | null;
   status: StatusCartinhaT;
   teste: boolean;
+  feita_com_ia: boolean;
   criado_em: string;
   atualizado_em: string;
 };
@@ -55,7 +56,7 @@ export type Database = {
     Tables: {
       cartinhas: Tabela<
         CartinhaRow,
-        "id" | "tamanho_roupa" | "tamanho_calcado" | "observacoes" | "imagem_path" | "status" | "teste" | "criado_em" | "atualizado_em"
+        "id" | "tamanho_roupa" | "tamanho_calcado" | "observacoes" | "imagem_path" | "status" | "teste" | "feita_com_ia" | "criado_em" | "atualizado_em"
       >;
       adocoes: Tabela<
         {

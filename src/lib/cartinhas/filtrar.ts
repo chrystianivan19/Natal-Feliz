@@ -12,6 +12,8 @@ export type CartinhaPublica = {
   tamanhoCalcado: string | null;
   imagemUrl: string | null;
   status: StatusCartinha;
+  /** Imagem refeita com IA a partir da carta da criança. */
+  feitaComIa: boolean;
 };
 
 export type Filtros = {

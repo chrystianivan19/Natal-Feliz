@@ -22,10 +22,11 @@ function mapear(l: Linha): CartinhaPublica {
     tamanhoCalcado: l.tamanho_calcado,
     imagemUrl: urlImagem("cartinhas", l.imagem_path),
     status: l.status!,
+    feitaComIa: l.feita_com_ia ?? false,
   };
 }
 
-const COLUNAS = "codigo, primeiro_nome, idade, genero, pedido, tamanho_roupa, tamanho_calcado, imagem_path, status";
+const COLUNAS = "codigo, primeiro_nome, idade, genero, pedido, tamanho_roupa, tamanho_calcado, imagem_path, status, feita_com_ia";
 
 export async function listarCartinhas(): Promise<CartinhaPublica[]> {
   "use cache";

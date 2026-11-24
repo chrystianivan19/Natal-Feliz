@@ -75,3 +75,15 @@ test.describe("página da cartinha e adoção", () => {
     expect(r?.status()).toBe(404);
   });
 });
+
+test.describe("cartinha refeita com IA", () => {
+  test.skip(({ isMobile }) => !isMobile, "só no projeto mobile");
+
+  test("cartão mostra o selo e a página explica", async ({ page }) => {
+    await page.goto("/cartinhas");
+    const card = page.getByTestId("card-cartinha").filter({ hasText: "C980" });
+    await expect(card).toContainText("Refeita com IA");
+    await page.goto("/cartinhas/C980");
+    await expect(page.getByTestId("aviso-ia")).toContainText("a equipe refez a imagem com inteligência artificial");
+  });
+});

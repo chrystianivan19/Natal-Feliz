@@ -12,7 +12,7 @@ export default async function NovaCartinha() {
       <h1 className="text-4xl">Nova cartinha</h1>
       <FormCartinha
         editando={false}
-        valores={{ codigo: "", primeiroNome: "", idade: "", genero: "", pedido: "", tamanhoRoupa: "", tamanhoCalcado: "", observacoes: "", teste: false, imagemUrl: null }}
+        valores={{ codigo: "", primeiroNome: "", idade: "", genero: "", pedido: "", tamanhoRoupa: "", tamanhoCalcado: "", observacoes: "", teste: false, feitaComIa: false, imagemUrl: null }}
       />
     </div>
   );
