@@ -15,6 +15,7 @@ export type ValoresCartinha = {
   tamanhoCalcado: string;
   observacoes: string;
   teste: boolean;
+  feitaComIa: boolean;
   imagemUrl: string | null;
 };
 
@@ -105,6 +106,10 @@ export function FormCartinha({ valores, editando }: { valores: ValoresCartinha; 
       <label className="flex min-h-11 items-center gap-3">
         <input type="checkbox" name="teste" defaultChecked={valores.teste} className="size-5 accent-pinheiro" />
         <span>Cartinha de teste (some com “Apagar cartinhas de teste”)</span>
+      </label>
+      <label className="flex min-h-11 items-center gap-3">
+        <input type="checkbox" name="feita_com_ia" defaultChecked={valores.feitaComIa} className="size-5 accent-pinheiro" />
+        <span>Imagem refeita com IA (o site mostra o aviso “Refeita com IA”)</span>
       </label>
       {estado.erro && <p role="alert" className="font-semibold text-vermelho">{estado.erro}</p>}
       <button

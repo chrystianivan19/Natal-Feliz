@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Carimbo } from "@/components/papel/Carimbo";
 import type { CartinhaPublica } from "@/lib/cartinhas/filtrar";
+import { SeloIa } from "./SeloIa";
 
 export function altCartinha(c: Pick<CartinhaPublica, "codigo" | "idade">) {
   return `Cartinha ${c.codigo}, criança de ${c.idade} ${c.idade === 1 ? "ano" : "anos"}`;
@@ -13,7 +14,7 @@ export function CardCartinha({ c, prioridade = false }: { c: CartinhaPublica; pr
     <li data-testid="card-cartinha" data-codigo={c.codigo}>
       <Link
         href={`/cartinhas/${c.codigo}`}
-        aria-label={`Ler a cartinha de ${c.primeiroNome}, ${c.idade} anos${c.status === "apadrinhada" ? ", já apadrinhada" : c.status === "pendente" ? ", aguardando confirmação" : ""}`}
+        aria-label={`Ler a cartinha de ${c.primeiroNome}, ${c.idade} anos${c.status === "apadrinhada" ? ", já apadrinhada" : c.status === "pendente" ? ", aguardando confirmação" : ""}${c.feitaComIa ? ", imagem refeita com IA" : ""}`}
         className="vidro vidro-interativo flex h-full flex-col overflow-hidden p-0"
       >
         <div className="relative aspect-[3/4] bg-white">
@@ -26,6 +27,7 @@ export function CardCartinha({ c, prioridade = false }: { c: CartinhaPublica; pr
             priority={prioridade}
             unoptimized={!c.imagemUrl}
           />
+          {c.feitaComIa && <SeloIa />}
           {c.status === "apadrinhada" && (
             <span className="absolute inset-0 flex items-center justify-center">
               <Carimbo texto="Apadrinhada" className="bg-papel/80 text-xl" />

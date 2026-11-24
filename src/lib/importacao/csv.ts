@@ -10,6 +10,8 @@ export type LinhaCartinha = {
   tamanhoRoupa: string | null;
   tamanhoCalcado: string | null;
   observacoes: string | null;
+  /** Imagem refeita com IA a partir da carta da criança (coluna opcional "ia"). */
+  feitaComIa: boolean;
 };
 export type ErroLinha = { linha: number; motivo: string };
 
@@ -85,6 +87,7 @@ export function lerCsvCartinhas(bruto: string): { linhas: LinhaCartinha[]; erros
       tamanhoRoupa: vazioParaNull(v("tamanho_roupa")),
       tamanhoCalcado: vazioParaNull(v("tamanho_calcado")),
       observacoes: vazioParaNull(v("observacoes")),
+      feitaComIa: /^(sim|s|x|1|true)$/i.test(v("ia")),
     });
   });
   return { linhas, erros };

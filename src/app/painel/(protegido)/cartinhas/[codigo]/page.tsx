@@ -34,6 +34,7 @@ export default async function EditarCartinha({ params }: { params: Promise<{ cod
           tamanhoCalcado: c.tamanho_calcado ?? "",
           observacoes: c.observacoes ?? "",
           teste: c.teste,
+          feitaComIa: c.feita_com_ia,
           imagemUrl,
         }}
       />

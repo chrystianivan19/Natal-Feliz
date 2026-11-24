@@ -6,6 +6,7 @@ const c = (codigo: string, idade: number, extra: Partial<CartinhaPublica> = {}):
   primeiroNome: "Ana",
   idade,
   genero: "menina",
+  feitaComIa: false,
   pedido: "Bola",
   tamanhoRoupa: null,
   tamanhoCalcado: null,

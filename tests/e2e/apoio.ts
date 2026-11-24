@@ -18,7 +18,7 @@ function lerEnv() {
 
 export async function cartinhasPublicas(): Promise<CartinhaPublica[]> {
   const env = lerEnv();
-  const url = `${env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/cartinhas_publicas?select=codigo,primeiro_nome,idade,genero,pedido,tamanho_roupa,tamanho_calcado,imagem_path,status&order=codigo`;
+  const url = `${env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/cartinhas_publicas?select=codigo,primeiro_nome,idade,genero,pedido,tamanho_roupa,tamanho_calcado,imagem_path,status,feita_com_ia&order=codigo`;
   const r = await fetch(url, { headers: { apikey: env.NEXT_PUBLIC_SUPABASE_ANON_KEY } });
   if (!r.ok) throw new Error(`Falha ao ler cartinhas: ${r.status}`);
   const linhas = (await r.json()) as Record<string, unknown>[];
@@ -32,6 +32,7 @@ export async function cartinhasPublicas(): Promise<CartinhaPublica[]> {
     tamanhoCalcado: (l.tamanho_calcado as string) ?? null,
     imagemUrl: (l.imagem_path as string) ?? null,
     status: l.status as CartinhaPublica["status"],
+    feitaComIa: Boolean(l.feita_com_ia),
   }));
 }
 

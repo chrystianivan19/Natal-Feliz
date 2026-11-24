@@ -31,6 +31,7 @@ export async function salvarCartinha(_anterior: EstadoForm, f: FormData): Promis
     tamanho_calcado: ouNull(texto(f, "tamanho_calcado")),
     observacoes: ouNull(texto(f, "observacoes")),
     teste: f.get("teste") === "on",
+    feita_com_ia: f.get("feita_com_ia") === "on",
     ...(texto(f, "imagem_path") ? { imagem_path: texto(f, "imagem_path") } : {}),
   };
   const original = texto(f, "codigo_original");
@@ -61,6 +62,7 @@ export async function importarLote(linhas: (LinhaCartinha & { imagemPath: string
     tamanho_roupa: l.tamanhoRoupa,
     tamanho_calcado: l.tamanhoCalcado,
     observacoes: l.observacoes,
+    feita_com_ia: l.feitaComIa,
     ...(l.imagemPath ? { imagem_path: l.imagemPath } : {}),
   }));
   const { error } = await supabase.from("cartinhas").upsert(registros, { onConflict: "codigo" });

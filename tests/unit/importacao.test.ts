@@ -30,6 +30,12 @@ describe("lerCsvCartinhas", () => {
     expect(lerCsvCartinhas(csv).linhas[0]).toMatchObject({ codigo: "C010", idade: 5 });
   });
 
+  test("coluna opcional ia: sim/x/1 marca cartinha feita com IA; sem coluna fica falso", () => {
+    const csv = "codigo;primeiro_nome;idade;genero;pedido;ia\nC021;Clara;8;Menina;Kit;sim\nC022;Marcos;10;Menino;Chuteira;\nC023;Alice;7;Menina;Patinete;X\n";
+    expect(lerCsvCartinhas(csv).linhas.map((l) => l.feitaComIa)).toEqual([true, false, true]);
+    expect(r.linhas.every((l) => l.feitaComIa === false)).toBe(true);
+  });
+
   test("cabeçalho sem colunas obrigatórias dá erro na linha 1", () => {
     const r2 = lerCsvCartinhas("nome;idade\nAna;7\n");
     expect(r2.linhas).toHaveLength(0);

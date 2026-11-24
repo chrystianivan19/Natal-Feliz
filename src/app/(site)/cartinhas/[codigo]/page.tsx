@@ -5,6 +5,7 @@ import { Visualizador } from "@/components/cartinhas/Visualizador";
 import { FormAdocao } from "@/components/cartinhas/FormAdocao";
 import { altCartinha } from "@/components/cartinhas/CardCartinha";
 import { Carimbo } from "@/components/papel/Carimbo";
+import { AvisoIa } from "@/components/cartinhas/SeloIa";
 import { CardVidro } from "@/components/vidro/CardVidro";
 import { listarCartinhas, obterCartinha } from "@/lib/dados/cartinhas";
 import { listarPontos } from "@/lib/dados/conteudo";
@@ -49,6 +50,7 @@ export default async function PaginaCartinha({ params }: Props) {
           <p className="text-sm text-tinta-suave">Cartinha {c.codigo}</p>
           <h1 className="text-6xl">{c.primeiroNome}</h1>
         </header>
+        {c.feitaComIa && <AvisoIa />}
         <CardVidro>
           <dl className="grid grid-cols-2 gap-x-4 gap-y-2">
             <div>
